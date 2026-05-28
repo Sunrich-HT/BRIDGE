@@ -1,0 +1,52 @@
+# BRIDGE 32B reference configuration. Mirrors Table 6 in the paper.
+
+base_model: Qwen/Qwen2.5-32B-Instruct
+
+backbone:
+  hidden_size: 5120          # filled in automatically from HF config
+  vocab_size: 152064
+  dtype: bfloat16
+  freeze: true
+
+state_dimensions:
+  d_o: 1024
+  d_l: 1024
+  d_m_tier: 1024
+  cross_attention_heads: 16
+
+triangular:
+  K_refinement: 3
+  alpha_o: 0.25
+  alpha_l: 0.25
+  alpha_m: 0.25
+  logit_clamp: 8.0
+  spectral_norm_attention: true
+
+dual_system:
+  habit_bank_size: 256
+  slow_depth: 4
+
+memory:
+  eta_e: 0.20
+  eta_a: 0.05
+  eta_p: 0.0035
+  delta_e: 0.5
+  delta_a: 0.2
+  delta_p: 0.05
+  snapshot_every: 10
+  gamma_e: 1.0
+  gamma_a: 1.0
+  gamma_p: 1.0
+
+losses:
+  lambda_cycle: 0.10
+  lambda_persona: 0.50
+
+training:
+  optimizer: AdamW
+  learning_rate: 1.0e-5
+  weight_decay: 0.01
+  grad_clip: 1.0
+  batch_size: 32
+  total_steps: 50000
+  warmup_steps: 1000
