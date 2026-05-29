@@ -25,11 +25,12 @@ def main() -> None:
     model = BridgeForCausalLM(config, backbone=None)
     model.eval()
 
-    B, T, P = 2, 16, 8
+    B, T = 2, 16
     input_ids = torch.randint(0, config.backbone_vocab_size, (B, T))
-    persona_ids = torch.randint(0, config.backbone_vocab_size, (B, P))
 
     # First call -- memory is initialized from the persona representation.
+    # (When a real backbone is attached, pass `persona_input_ids` instead and
+    # the wrapper runs `_encode_persona` for you.)
     persona_repr = torch.randn(B, config.backbone_hidden_size)
     out = model(input_ids=input_ids, persona_repr=persona_repr, labels=input_ids)
 
